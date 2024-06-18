@@ -1,0 +1,10 @@
+INSERT INTO pessoa (nome, data_nascimento) VALUES ('Maria', '2000-10-18');
+INSERT INTO pessoa (nome, data_nascimento) VALUES ('João', '1990-05-12');
+INSERT INTO pessoa (nome, data_nascimento) VALUES ('Caio', '1961-05-02');
+INSERT INTO pessoa (nome, data_nascimento) VALUES ('Miguel', '1988-10-14');
+INSERT INTO pessoa (nome, data_nascimento) VALUES ('Alice', '1995-01-05');
+INSERT INTO pessoa (nome, data_nascimento) VALUES ('Heitor', '1999-11-19');
+INSERT INTO pessoa (nome, data_nascimento) VALUES ('Arthur', '1993-03-31');
+INSERT INTO pessoa (nome, data_nascimento) VALUES ('Laura', '1994-07-08');
+INSERT INTO pessoa (nome, data_nascimento) VALUES ('Heloísa', '2003-05-24');
+INSERT INTO pessoa (nome, data_nascimento) VALUES ('Helena', '1996-09-02');
