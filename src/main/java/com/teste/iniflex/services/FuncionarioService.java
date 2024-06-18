@@ -1,6 +1,7 @@
 package com.teste.iniflex.services;
 
 import com.teste.iniflex.controllers.FuncionarioController;
+import com.teste.iniflex.exceptions.ResourceNotFoundException;
 import com.teste.iniflex.model.funcionario.Funcionario;
 import com.teste.iniflex.model.pessoa.Pessoa;
 import com.teste.iniflex.records.FuncionarioDTO;
@@ -32,7 +33,7 @@ public class FuncionarioService {
     }
 
     public FuncionarioVO findById(Long id) {
-        Funcionario funcionario = repository.findById(id).orElseThrow(() -> new RuntimeException("ID não encontrado!"));
+        Funcionario funcionario = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("ID não encontrado!"));
         FuncionarioVO funcionarioVO = new FuncionarioVO(funcionario);
 
         funcionarioVO.add(linkTo(methodOn(FuncionarioController.class).findById(funcionario.getId())).withSelfRel());
@@ -40,7 +41,7 @@ public class FuncionarioService {
     }
 
     public void delete(Long id) {
-        Funcionario funcionario = repository.findById(id).orElseThrow(() -> new RuntimeException("ID não encontrado!"));
+        Funcionario funcionario = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("ID não encontrado!"));
         repository.delete(funcionario);
     }
 }
