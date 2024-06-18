@@ -36,6 +36,8 @@ public class Funcionario extends Pessoa {
         this.funcao = funcao;
     }
 
+    public Funcionario() {}
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

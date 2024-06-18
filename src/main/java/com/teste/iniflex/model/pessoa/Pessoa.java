@@ -22,6 +22,8 @@ public class Pessoa implements Serializable {
     @Column(name = "data_nascimento", nullable = false)
     private LocalDate dataNascimento;
 
+    public Pessoa() {}
+
     public Long getId() {
         return id;
     }
