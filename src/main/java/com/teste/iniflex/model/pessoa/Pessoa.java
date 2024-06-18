@@ -1,6 +1,8 @@
 package com.teste.iniflex.model.pessoa;
 
+import com.teste.iniflex.records.FuncionarioDTO;
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -23,6 +25,11 @@ public class Pessoa implements Serializable {
     private LocalDate dataNascimento;
 
     public Pessoa() {}
+
+    public Pessoa(FuncionarioDTO dto) {
+        this.nome = dto.nome();
+        this.dataNascimento = dto.dataNascimento();
+    }
 
     public Long getId() {
         return id;

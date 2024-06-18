@@ -1,6 +1,7 @@
 package com.teste.iniflex.model.funcionario;
 
 import com.teste.iniflex.model.pessoa.Pessoa;
+import com.teste.iniflex.records.FuncionarioDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrimaryKeyJoinColumn;
@@ -20,6 +21,14 @@ public class Funcionario extends Pessoa {
     @Column(nullable = false)
     private String funcao;
 
+    public Funcionario() {}
+
+    public Funcionario(FuncionarioDTO dto) {
+        super(dto);
+        this.funcao = dto.funcao();
+        this.salario = dto.salario();
+    }
+
     public BigDecimal getSalario() {
         return salario;
     }
@@ -35,8 +44,6 @@ public class Funcionario extends Pessoa {
     public void setFuncao(String funcao) {
         this.funcao = funcao;
     }
-
-    public Funcionario() {}
 
     @Override
     public boolean equals(Object o) {
