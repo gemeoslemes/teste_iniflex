@@ -2,8 +2,6 @@ package com.teste.iniflex.records;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.teste.iniflex.model.funcionario.Funcionario;
 import org.springframework.hateoas.RepresentationModel;
 
@@ -12,7 +10,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class FuncionarioVO extends RepresentationModel<FuncionarioVO> {
+public class FuncionarioIdadeVO extends RepresentationModel<FuncionarioIdadeVO> {
 
     @JsonProperty("id")
     private Long key;
@@ -27,9 +25,11 @@ public class FuncionarioVO extends RepresentationModel<FuncionarioVO> {
 
     private String funcao;
 
-    public FuncionarioVO() {}
+    private Integer idade;
 
-    public FuncionarioVO(Funcionario funcionario) {
+    public FuncionarioIdadeVO() {}
+
+    public FuncionarioIdadeVO(Funcionario funcionario) {
         this.key = funcionario.getId();
         this.nome = funcionario.getNome();
         this.dataNascimento = funcionario.getDataNascimento();
@@ -42,13 +42,21 @@ public class FuncionarioVO extends RepresentationModel<FuncionarioVO> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        FuncionarioVO that = (FuncionarioVO) o;
-        return Objects.equals(key, that.key) && Objects.equals(nome, that.nome) && Objects.equals(dataNascimento, that.dataNascimento) && Objects.equals(salario, that.salario) && Objects.equals(funcao, that.funcao);
+        FuncionarioIdadeVO that = (FuncionarioIdadeVO) o;
+        return Objects.equals(key, that.key) && Objects.equals(nome, that.nome) && Objects.equals(dataNascimento, that.dataNascimento) && Objects.equals(salario, that.salario) && Objects.equals(funcao, that.funcao) && Objects.equals(idade, that.idade);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), key, nome, dataNascimento, salario, funcao);
+        return Objects.hash(super.hashCode(), key, nome, dataNascimento, salario, funcao, idade);
+    }
+
+    public Integer getIdade() {
+        return idade;
+    }
+
+    public void setIdade(Integer idade) {
+        this.idade = idade;
     }
 
     public Long getKey() {
