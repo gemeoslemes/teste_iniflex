@@ -2,6 +2,7 @@ package com.teste.iniflex.controllers;
 
 import com.teste.iniflex.records.*;
 import com.teste.iniflex.services.FuncionarioService;
+import com.teste.iniflex.utils.MediaType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,7 +29,8 @@ public class FuncionarioController {
     @Autowired
     private FuncionarioService service;
 
-    @PostMapping
+    @PostMapping(produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML},
+                consumes = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Operation(summary = "Criando Funcinário", description = "Criando Funcinário",
             tags = {"Funcionários"},
             responses = {
@@ -48,7 +50,8 @@ public class FuncionarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(detalhamentoDTO);
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/{id}",
+            produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Operation(summary = "Buscando Funcionário", description = "Buscando Funcionário",
             tags = {"Funcionários"},
             responses = {
@@ -68,7 +71,8 @@ public class FuncionarioController {
         return ResponseEntity.ok(vo);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/{id}",
+            produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Operation(summary = "Deletando Funcinário", description = "Deletando Funcinário",
             tags = {"Funcionários"},
             responses = {
@@ -84,7 +88,7 @@ public class FuncionarioController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
+    @GetMapping(produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Operation(summary = "Buscando todos os Funcinários", description = "Buscando todos os Funcinários",
             tags = {"Funcionários"},
             responses = {
@@ -109,7 +113,8 @@ public class FuncionarioController {
         return ResponseEntity.ok(service.findAll(pageable));
     }
 
-    @PutMapping
+    @PutMapping(produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML},
+                consumes = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Operation(summary = "Atualizando salário de todos os Funcinários", description = "Atualizando salário de todos os Funcinários",
             tags = {"Funcionários"},
             responses = {
@@ -128,7 +133,8 @@ public class FuncionarioController {
         return ResponseEntity.ok(service.updateAllSalaries(increase));
     }
 
-    @GetMapping(value = "/funcao")
+    @GetMapping(value = "/funcao",
+            produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Operation(summary = "Agrupando Funcinários por função", description = "Agrupando Funcinários por função",
             tags = {"Funcionários"},
             responses = {
@@ -147,7 +153,8 @@ public class FuncionarioController {
         return ResponseEntity.ok(service.groupByFunctionVO());
     }
 
-    @GetMapping(value = "/aniversarios")
+    @GetMapping(value = "/aniversarios",
+            produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Operation(summary = "Trazendo todos os Funcinários que fazem aniversário nos meses 10 e 12",
             description = "Trazendo todos os Funcinários que fazem aniversário nos meses 10 e 12",
             tags = {"Funcionários"},
@@ -173,7 +180,8 @@ public class FuncionarioController {
         return ResponseEntity.ok(service.findEmployeesWithBirthdaysInOctoberAndDecember(pageable));
     }
 
-    @GetMapping(value = "/maior-idade")
+    @GetMapping(value = "/maior-idade",
+            produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Operation(summary = "Trazendo o Funcinário com a maior idade",
             description = "Trazendo o Funcinário com a maior idade",
             tags = {"Funcionários"},
@@ -193,7 +201,8 @@ public class FuncionarioController {
         return ResponseEntity.ok(service.findEmployeeWithOldestAge());
     }
 
-    @GetMapping(value = "/ordem-alfabetica")
+    @GetMapping(value = "/ordem-alfabetica",
+            produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Operation(summary = "Trazendo todos os Funcinários em ordem alfabética",
             description = "Trazendo todos os Funcinários em ordem alfabética",
             tags = {"Funcionários"},
@@ -219,7 +228,8 @@ public class FuncionarioController {
         return ResponseEntity.ok(service.findAll(pageable));
     }
 
-    @GetMapping(value = "/salario-total")
+    @GetMapping(value = "/salario-total",
+            produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Operation(summary = "Trazendo a soma do salário total de todos os Funcionários",
             description = "Trazendo a soma do salário total de todos os Funcionários",
             tags = {"Funcionários"},
@@ -239,7 +249,8 @@ public class FuncionarioController {
         return ResponseEntity.ok(service.calculateGlobalSalaryForEmployees());
     }
 
-    @GetMapping(value = "/salario-minimo")
+    @GetMapping(value = "/salario-minimo",
+            produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     @Operation(summary = "Calculando quantos salários mínimos cada Funcionário possui",
             description = "Calculando quantos salários mínimos cada Funcionário possui",
             tags = {"Funcionários"},
