@@ -18,7 +18,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -93,6 +95,25 @@ public class FuncionarioService {
         return pessoas.stream()
                 .map(this::convertToVO)
                 .collect(Collectors.toList());
+    }
+
+    public Map<String, List<FuncionarioVO>> groupByFunctionVO() {
+        List<Funcionario> funcionarios = repository.findAll();
+        Map<String, List<FuncionarioVO>> funcionariosPorFuncao = new HashMap<>();
+
+        for (Funcionario funcionario : funcionarios) {
+            String funcao = funcionario.getFuncao();
+            FuncionarioVO funcionarioVO = convertToVO(funcionario);
+
+            if (funcionariosPorFuncao.containsKey(funcao)) {
+                funcionariosPorFuncao.get(funcao).add(funcionarioVO);
+            } else {
+                List<FuncionarioVO> funcinariosDaFuncao = new ArrayList<>();
+                funcinariosDaFuncao.add(funcionarioVO);
+                funcionariosPorFuncao.put(funcao, funcinariosDaFuncao);
+            }
+        }
+        return funcionariosPorFuncao;
     }
 
     public BigDecimal calcularNovoSalario(BigDecimal salarioAtual, BigDecimal percentualAumento) {

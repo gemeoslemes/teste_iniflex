@@ -14,8 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/funcionarios/v1")
@@ -57,5 +57,11 @@ public class FuncionarioController {
     @PutMapping
     public ResponseEntity<List<FuncionarioVO>> updateAllSalaries(@RequestBody IncreaseRequestDTO increase) {
         return ResponseEntity.ok(service.updateAllSalaries(increase));
+    }
+
+    @GetMapping(value = "/funcionarios-por-funcao")
+    public ResponseEntity<Map<String, List<FuncionarioVO>>> employeesByFunction() {
+        Map<String, List<FuncionarioVO>> employeesByFunction = service.groupByFunctionVO();
+        return ResponseEntity.ok(employeesByFunction);
     }
 }
