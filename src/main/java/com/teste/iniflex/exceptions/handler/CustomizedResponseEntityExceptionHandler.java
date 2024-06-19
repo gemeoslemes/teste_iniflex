@@ -1,6 +1,7 @@
 package com.teste.iniflex.exceptions.handler;
 
 import com.teste.iniflex.exceptions.ExceptionResponse;
+import com.teste.iniflex.exceptions.InvalidJwtAuthenticationException;
 import com.teste.iniflex.exceptions.ResourceNotFoundException;
 import com.teste.iniflex.exceptions.SalaryIncreaseAboveLimitException;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,18 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
     @ExceptionHandler(SalaryIncreaseAboveLimitException.class)
     public final ResponseEntity<ExceptionResponse> handlerSalaryIncreaseAboveLimitException(
+            Exception ex, WebRequest webRequest
+    ) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                webRequest.getDescription(false)
+        );
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidJwtAuthenticationException.class)
+    public final ResponseEntity<ExceptionResponse> handlerSTokenExpirerOrInvalid(
             Exception ex, WebRequest webRequest
     ) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(
