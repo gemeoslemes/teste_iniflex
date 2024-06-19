@@ -2,10 +2,13 @@ package com.teste.iniflex.records;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.teste.iniflex.model.funcionario.Funcionario;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -19,6 +22,7 @@ public class FuncionarioVO extends RepresentationModel<FuncionarioVO> {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataNascimento;
 
+    @JsonFormat(shape = JsonFormat.Shape.NUMBER_FLOAT)
     private BigDecimal salario;
 
     private String funcao;
@@ -29,7 +33,7 @@ public class FuncionarioVO extends RepresentationModel<FuncionarioVO> {
         this.key = funcionario.getId();
         this.nome = funcionario.getNome();
         this.dataNascimento = funcionario.getDataNascimento();
-        this.salario = funcionario.getSalario();
+        this.salario = funcionario.getSalario().setScale(2, RoundingMode.HALF_UP);
         this.funcao = funcionario.getFuncao();
     }
 
@@ -76,7 +80,7 @@ public class FuncionarioVO extends RepresentationModel<FuncionarioVO> {
     }
 
     public void setSalario(BigDecimal salario) {
-        this.salario = salario;
+        this.salario = salario.setScale(2, RoundingMode.HALF_UP);
     }
 
     public String getFuncao() {
