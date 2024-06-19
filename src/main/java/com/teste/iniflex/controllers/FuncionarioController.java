@@ -74,4 +74,9 @@ public class FuncionarioController {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "nome"));
         return ResponseEntity.ok(service.findEmployeesWithBirthdaysInOctoberAndDecember(pageable));
     }
+
+    @GetMapping(value = "/funcionario-maior-idade")
+    public ResponseEntity<Map<String, Object>> findEmployeeWithOldestAge() {
+        return ResponseEntity.ok(service.findEmployeeWithOldestAge());
+    }
 }

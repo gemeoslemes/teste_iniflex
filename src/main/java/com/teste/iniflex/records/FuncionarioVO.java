@@ -27,6 +27,8 @@ public class FuncionarioVO extends RepresentationModel<FuncionarioVO> {
 
     private String funcao;
 
+    private Integer idade;
+
     public FuncionarioVO() {}
 
     public FuncionarioVO(Funcionario funcionario) {
@@ -49,6 +51,14 @@ public class FuncionarioVO extends RepresentationModel<FuncionarioVO> {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), key, nome, dataNascimento, salario, funcao);
+    }
+
+    public Integer getIdade() {
+        return idade;
+    }
+
+    public void setIdade(Integer idade) {
+        this.idade = idade;
     }
 
     public Long getKey() {

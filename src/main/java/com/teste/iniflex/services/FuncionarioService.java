@@ -19,7 +19,9 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.Month;
+import java.time.Period;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -123,6 +125,37 @@ public class FuncionarioService {
 
         return assembler.toModel(new PageImpl<>(funcionariosAniversarioOutubroDezembro,
                 pageable, funcionariosPage.getTotalElements()), link);
+    }
+
+    public Map<String, Object> findEmployeeWithOldestAge() {
+        List<Funcionario> funcionarios = repository.findAll();
+
+        Funcionario funcionarioMaisVelho = null;
+        int idadeMaisVelho = -1;
+
+        for (Funcionario funcionario : funcionarios) {
+            int idade = calcularIdade(funcionario.getDataNascimento());
+
+            if (idade > idadeMaisVelho) {
+                idadeMaisVelho = idade;
+                funcionarioMaisVelho = funcionario;
+            }
+        }
+
+        if (funcionarioMaisVelho != null) {
+            Map<String, Object> result = new HashMap<>();
+            result.put("nome", funcionarioMaisVelho.getNome());
+            result.put("idade", idadeMaisVelho);
+
+            return result;
+        } else {
+            throw new ResourceNotFoundException("Nenhum funcionário encontrado.");
+        }
+    }
+
+    public static int calcularIdade(LocalDate dataNascimento) {
+        LocalDate hoje = LocalDate.now();
+        return Period.between(dataNascimento, hoje).getYears();
     }
 
     private void addSelfRelLinks(List<FuncionarioVO> funcionariosVO) {
