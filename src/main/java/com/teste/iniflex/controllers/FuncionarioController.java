@@ -79,4 +79,15 @@ public class FuncionarioController {
     public ResponseEntity<Map<String, Object>> findEmployeeWithOldestAge() {
         return ResponseEntity.ok(service.findEmployeeWithOldestAge());
     }
+
+    @GetMapping(value = "/funcionarios-ordem-alfabetica")
+    public ResponseEntity<PagedModel<EntityModel<FuncionarioVO>>> findEmployeesInAlphabeticOrder(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "10") Integer size,
+            @RequestParam(value = "direction", defaultValue = "asc") String direction
+    ) {
+        var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "nome"));
+        return ResponseEntity.ok(service.findAll(pageable));
+    }
 }
