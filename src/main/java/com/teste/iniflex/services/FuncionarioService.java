@@ -4,10 +4,7 @@ import com.teste.iniflex.controllers.FuncionarioController;
 import com.teste.iniflex.exceptions.ResourceNotFoundException;
 import com.teste.iniflex.exceptions.SalaryIncreaseAboveLimitException;
 import com.teste.iniflex.model.funcionario.Funcionario;
-import com.teste.iniflex.records.FuncionarioDTO;
-import com.teste.iniflex.records.FuncionarioSalarioTotalVO;
-import com.teste.iniflex.records.FuncionarioVO;
-import com.teste.iniflex.records.IncreaseRequestDTO;
+import com.teste.iniflex.records.*;
 import com.teste.iniflex.repositories.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +17,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Period;
@@ -40,6 +38,11 @@ public class FuncionarioService {
 
     @Autowired
     private PagedResourcesAssembler<FuncionarioVO> assembler;
+
+    @Autowired
+    private PagedResourcesAssembler<FuncionarioSalarioMinimoVO> assemblerSalarioCalculado;
+
+    private final BigDecimal SALARIO_MINIMO = BigDecimal.valueOf(1212.00);
 
     public FuncionarioVO salvar(FuncionarioDTO dto) {
         Funcionario funcionario = new Funcionario(dto);
@@ -176,6 +179,28 @@ public class FuncionarioService {
                 .calculateGlobalSalaryForEmployees()).withSelfRel());
 
         return globalSalarioVO;
+    }
+
+
+    public PagedModel<EntityModel<FuncionarioSalarioMinimoVO>> calculateIndividualMinimumSalaries(Pageable pageable) {
+        Page<Funcionario> funcionariosPage = repository.findAll(pageable);
+
+        List<FuncionarioSalarioMinimoVO> salarioMinimoList = funcionariosPage.getContent().stream()
+                .map(funcionario -> {
+                    BigDecimal salariosMinimos = funcionario.getSalario().divide(SALARIO_MINIMO, 2, RoundingMode.HALF_UP);
+                    FuncionarioSalarioMinimoVO vo = new FuncionarioSalarioMinimoVO(funcionario.getNome(), salariosMinimos);
+                    vo.add(linkTo(methodOn(FuncionarioController.class).findById(funcionario.getId())).withSelfRel());
+                    return vo;
+                })
+                .collect(Collectors.toList());
+
+        Page<FuncionarioSalarioMinimoVO> pageSalarioMinimo = new PageImpl<>(salarioMinimoList, pageable, funcionariosPage.getTotalElements());
+
+        Link link = linkTo(methodOn(FuncionarioController.class)
+                .calculateIndividualMinimumSalaries(pageable.getPageNumber(), pageable.getPageSize(), "asc"))
+                .withSelfRel();
+
+        return assemblerSalarioCalculado.toModel(pageSalarioMinimo, link);
     }
 
     public static int calcularIdade(LocalDate dataNascimento) {

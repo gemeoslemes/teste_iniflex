@@ -1,9 +1,6 @@
 package com.teste.iniflex.controllers;
 
-import com.teste.iniflex.records.FuncionarioDTO;
-import com.teste.iniflex.records.FuncionarioSalarioTotalVO;
-import com.teste.iniflex.records.FuncionarioVO;
-import com.teste.iniflex.records.IncreaseRequestDTO;
+import com.teste.iniflex.records.*;
 import com.teste.iniflex.services.FuncionarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -95,5 +92,16 @@ public class FuncionarioController {
     @GetMapping(value = "/calculo-salario-total-funcionarios")
     public ResponseEntity<FuncionarioSalarioTotalVO>  calculateGlobalSalaryForEmployees() {
         return ResponseEntity.ok(service.calculateGlobalSalaryForEmployees());
+    }
+
+    @GetMapping(value = "/salario-minimo")
+    public ResponseEntity<PagedModel<EntityModel<FuncionarioSalarioMinimoVO>>> calculateIndividualMinimumSalaries(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "10") Integer size,
+            @RequestParam(value = "direction", defaultValue = "asc") String direction
+    ) {
+        var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), "nome"));
+        return ResponseEntity.ok(service.calculateIndividualMinimumSalaries(pageable));
     }
 }
