@@ -1,6 +1,7 @@
 package com.teste.iniflex.controllers;
 
 import com.teste.iniflex.records.FuncionarioDTO;
+import com.teste.iniflex.records.FuncionarioSalarioTotalVO;
 import com.teste.iniflex.records.FuncionarioVO;
 import com.teste.iniflex.records.IncreaseRequestDTO;
 import com.teste.iniflex.services.FuncionarioService;
@@ -89,5 +90,10 @@ public class FuncionarioController {
         var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "nome"));
         return ResponseEntity.ok(service.findAll(pageable));
+    }
+
+    @GetMapping(value = "/calculo-salario-total-funcionarios")
+    public ResponseEntity<FuncionarioSalarioTotalVO>  calculateGlobalSalaryForEmployees() {
+        return ResponseEntity.ok(service.calculateGlobalSalaryForEmployees());
     }
 }

@@ -5,6 +5,7 @@ import com.teste.iniflex.exceptions.ResourceNotFoundException;
 import com.teste.iniflex.exceptions.SalaryIncreaseAboveLimitException;
 import com.teste.iniflex.model.funcionario.Funcionario;
 import com.teste.iniflex.records.FuncionarioDTO;
+import com.teste.iniflex.records.FuncionarioSalarioTotalVO;
 import com.teste.iniflex.records.FuncionarioVO;
 import com.teste.iniflex.records.IncreaseRequestDTO;
 import com.teste.iniflex.repositories.FuncionarioRepository;
@@ -151,6 +152,30 @@ public class FuncionarioService {
         } else {
             throw new ResourceNotFoundException("Nenhum funcionário encontrado.");
         }
+    }
+
+    public FuncionarioSalarioTotalVO calculateGlobalSalaryForEmployees() {
+        List<Funcionario> funcionarios = repository.findAll();
+
+        if (funcionarios.isEmpty()) {
+            throw new ResourceNotFoundException("Nenhum funcionário encontrado.");
+        }
+
+        BigDecimal salarioTotal = BigDecimal.ZERO;
+
+        for (Funcionario funcionario : funcionarios) {
+            salarioTotal = salarioTotal.add(funcionario.getSalario());
+        }
+
+        FuncionarioSalarioTotalVO globalSalarioVO = new FuncionarioSalarioTotalVO();
+
+        globalSalarioVO.setNome("salary global");
+        globalSalarioVO.setSalario(salarioTotal);
+
+        globalSalarioVO.add(linkTo(methodOn(FuncionarioController.class)
+                .calculateGlobalSalaryForEmployees()).withSelfRel());
+
+        return globalSalarioVO;
     }
 
     public static int calcularIdade(LocalDate dataNascimento) {
