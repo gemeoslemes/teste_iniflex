@@ -9,6 +9,8 @@ import com.teste.iniflex.records.FuncionarioVO;
 import com.teste.iniflex.records.IncreaseRequestDTO;
 import com.teste.iniflex.repositories.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
@@ -17,10 +19,8 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.Month;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -69,12 +69,7 @@ public class FuncionarioService {
         funcionarioVOPage.map(
                 f -> f.add(linkTo(methodOn(FuncionarioController.class).findById(f.getKey())).withSelfRel()));
 
-        Link link = linkTo(methodOn(FuncionarioController.class)
-                .findAll(
-                        pageable.getPageNumber(),
-                        pageable.getPageSize(),
-                        "asc"
-                        )).withSelfRel();
+        Link link = paginationLinkTo(pageable);
 
         return assembler.toModel(funcionarioVOPage, link);
     }
@@ -114,6 +109,45 @@ public class FuncionarioService {
             }
         }
         return funcionariosPorFuncao;
+    }
+
+    public PagedModel<EntityModel<FuncionarioVO>> findEmployeesWithBirthdaysInOctoberAndDecember(Pageable pageable) {
+        Page<Funcionario> funcionariosPage = repository.findAll(pageable);
+
+        List<FuncionarioVO> funcionariosAniversarioOutubroDezembro = filterByBirthdayMonths(
+                funcionariosPage, Month.OCTOBER, Month.DECEMBER);
+
+        addSelfRelLinks(funcionariosAniversarioOutubroDezembro);
+
+        Link link = paginationLinkTo(pageable);
+
+        return assembler.toModel(new PageImpl<>(funcionariosAniversarioOutubroDezembro,
+                pageable, funcionariosPage.getTotalElements()), link);
+    }
+
+    private void addSelfRelLinks(List<FuncionarioVO> funcionariosVO) {
+        funcionariosVO.forEach(funcionarioVO -> {
+            funcionarioVO.add(linkTo(methodOn(FuncionarioController.class).findById(funcionarioVO.getKey())).withSelfRel());
+        });
+    }
+
+    public List<FuncionarioVO> filterByBirthdayMonths(Page<Funcionario> funcionariosPage, Month... meses) {
+        return funcionariosPage.getContent().stream()
+                .filter(funcionario -> {
+                    Month mesAniversario = funcionario.getDataNascimento().getMonth();
+                    return Arrays.asList(meses).contains(mesAniversario);
+                })
+                .map(FuncionarioVO::new)
+                .collect(Collectors.toList());
+    }
+
+    public Link paginationLinkTo(Pageable pageable) {
+        return linkTo(methodOn(FuncionarioController.class)
+                .findAll(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        "asc"
+                )).withSelfRel();
     }
 
     public BigDecimal calcularNovoSalario(BigDecimal salarioAtual, BigDecimal percentualAumento) {
